@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Data</title>
+   <link rel="stylesheet" type="text/css" href="/cosmos.css">
+    <script src="/cosmos.js"></script>
+</head>
+<body>
+     <h1>Flight Information</h1>
+
+    <!-- Filters for destination and airline -->
+  <div>
+        <label for="destinationFilter">Filter by Destination:</label>
+        <input type="text" id="destinationFilter" placeholder="Enter destination..">
+
+        <label for="airlineFilter">Filter by Airline:</label>
+        <input type="text" id="airlineFilter" placeholder="Enter airline..">
+
+        <button id="searchButton">Filter</button>
+       
+    </div>
+    <table border="1" id="flightTable">
+        <thead>
+            <tr>
+            <th>No</th>
+                <th>Flight Number</th>
+                <th>Airline</th>
+                <th>Origin</th>
+                <th>Destination</th>
+                <th>Scheduled Departure</th>
+                <th>Actual Departure</th>
+                <th>Delays</th>
+            </tr>
+        </thead>
+        <tbody id="flightTableBody">
+           
+               <%count= 1%>
+            <% @flights.each do |flight| %>
+            <tr>
+            <td><%= count %></td>
+                <td><%= flight['flight_number'] %></td>
+                <td><%= flight['airline'] %></td>
+                <td><%= flight['origin'] %></td>
+                <td><%= flight['destination'] %></td>
+                <td><%= flight['scheduled_departure_at'] %></td>
+                <td><%= flight['actual_departure_at'] %></td>
+                <td>
+                    <ul>
+                        <% flight['delays'].each do |delay| %>
+                        <li>Code: <%= delay['code'] %> </li>
+                        <li>Description: <%= delay['description'] %> (<%= delay['time_minutes'] %> minutes)</li>
+                        <li>Delay Time: <%= delay['time_minutes'] %> minutes</li>
+                        <% end %>
+                    </ul>
+                </td>
+            </tr>
+                <%count=count+1%>
+            <% end %>
+        </tbody>
+    </table>
+
+      <!-- Notice if no flights are found -->
+    <div id="emptyNotice" class="notice">
+        No flights found matching the criteria.
+    </div>
+
+      <button id="reloadBtn">Go Back</button>
+
+
+
+  
+</body>
+
+
+</html>

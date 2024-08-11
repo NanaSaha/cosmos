@@ -1,0 +1,46 @@
+     /* Add some basic styling */
+     body {
+         font-family: Arial, sans-serif;
+     }
+
+     table {
+         width: 100%;
+         border-collapse: collapse;
+         margin-top: 20px;
+     }
+
+     th,
+     td {
+         padding: 10px;
+         text-align: left;
+     }
+
+     th {
+         background-color: #f2f2f2;
+     }
+
+     input {
+         padding: 8px;
+         margin: 5px 0;
+         width: 200px;
+     }
+
+     button {
+         padding: 8px 16px;
+         margin-top: 10px;
+     }
+
+     .buttons {
+         margin-top: 20px;
+     }
+
+     .buttons button {
+         margin-right: 10px;
+     }
+
+     .notice {
+         margin-top: 20px;
+         color: red;
+         font-weight: bold;
+         display: none;
+     }
