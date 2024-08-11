@@ -3,14 +3,14 @@
 <head>
      <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flight Data</title>
+    <title>Cosmos Flight Data</title>
    <link rel="stylesheet" type="text/css" href="/cosmos.css">
     <script src="/cosmos.js"></script>
 </head>
 <body>
-     <h1>Flight Information</h1>
+     <h1>Cosmos Flight Information</h1>
 
-    <!-- Filters for destination and airline -->
+    
   <div>
         <label for="destinationFilter">Filter by Destination:</label>
         <input type="text" id="destinationFilter" placeholder="Enter destination..">
@@ -36,19 +36,19 @@
         </thead>
         <tbody id="flightTableBody">
            
-               <%count= 1%>
-            <% @flights.each do |flight| %>
+          <%count= 1%>
+            <% @all_flights.each do |fl| %>
             <tr>
             <td><%= count %></td>
-                <td><%= flight['flight_number'] %></td>
-                <td><%= flight['airline'] %></td>
-                <td><%= flight['origin'] %></td>
-                <td><%= flight['destination'] %></td>
-                <td><%= flight['scheduled_departure_at'] %></td>
-                <td><%= flight['actual_departure_at'] %></td>
+                <td><%= fl['flight_number'] %></td>
+                <td><%= fl['airline'] %></td>
+                <td><%= fl['origin'] %></td>
+                <td><%= fl['destination'] %></td>
+                <td><%= fl['scheduled_departure_at'] %></td>
+                <td><%= fl['actual_departure_at'] %></td>
                 <td>
                     <ul>
-                        <% flight['delays'].each do |delay| %>
+                        <% fl['delays'].each do |delay| %>
                         <li>Code: <%= delay['code'] %> </li>
                         <li>Description: <%= delay['description'] %> (<%= delay['time_minutes'] %> minutes)</li>
                         <li>Delay Time: <%= delay['time_minutes'] %> minutes</li>
@@ -61,10 +61,11 @@
         </tbody>
     </table>
 
-      <!-- Notice if no flights are found -->
+      <!-- Show if no flights are found -->
     <div id="emptyNotice" class="notice">
-        No flights found matching the criteria.
+        No flights found matching after entering parameters.
     </div>
+    <br>
 
       <button id="reloadBtn">Go Back</button>
 

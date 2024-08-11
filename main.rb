@@ -3,31 +3,30 @@ require 'json'
 require 'net/http'
 require 'securerandom'
 
-# Set the public folder to serve static files
 set :public_folder, 'public'
 
 # URLs to fetch data from
-FLIGHT_SCHEDULES_URL = "https://challenge.usecosmos.cloud/flight_schedules.json"
-FLIGHT_DELAYS_URL = "https://challenge.usecosmos.cloud/flight_delays.json"
-
-# In-memory storage
+SCHEDULES_JSON = "https://challenge.usecosmos.cloud/flight_schedules.json"
+DELAYS_JSON = "https://challenge.usecosmos.cloud/flight_delays.json"
 
 
-# Fetch and store flight data
-def fetch_flight_data
+# retrieve and store all the flight data 
+def retrieve_flight_data
 
-    flights_data = []
-  # Fetch schedules
-  schedules_response = Net::HTTP.get(URI(FLIGHT_SCHEDULES_URL))
-  schedules = JSON.parse(schedules_response)
+  sample_flights_data = []
 
-  # Fetch delays
-  delays_response = Net::HTTP.get(URI(FLIGHT_DELAYS_URL))
-  delays = JSON.parse(delays_response)
+  # retrieve schedules from the JSON link
+  schedules_response = Net::HTTP.get(URI(SCHEDULES_JSON))
+  all_schedules = JSON.parse(schedules_response)
 
-  # Index delays by flight number
-  delay_dict = {}
-  delays.each do |delay|
+  # retrieve delays from the JSON link
+  delays_response = Net::HTTP.get(URI(DELAYS_JSON))
+  all_delays = JSON.parse(delays_response)
+
+
+  # Index delays by a specific flight number
+  delay_arr = {}
+  all_delays.each do |delay|
 
     flight_num =  delay["Flight"]["OperatingFlight"]&.dig("Number")
 
@@ -37,17 +36,10 @@ def fetch_flight_data
 
     delayDesc = delay["FlightLegs"][0]["Departure"]["Delay"]["Code1"]&.dig("Description")
 
-    # puts "time  -- #{delayMins}"
-    # puts "Description  -- #{delayDesc}"
-     # puts "flight_num delay --- #{flight_num}"
-
-    # puts "Codes  -- #{delayCode}"
-
-  
-  
+   
      flight_number = delay["Flight"]["OperatingFlight"]["Number"]
-     delay_dict[flight_number] ||= []
-    delay_dict[flight_number] << {
+     delay_arr[flight_number] ||= []
+     delay_arr[flight_number] << {
       "code" => delayCode,
       "time_minutes" => delayMins,
       "description" => delayDesc
@@ -55,18 +47,15 @@ def fetch_flight_data
   end
 
   # Process schedules and match with delays
-schedules.each do |schedule|
+  all_schedules.each do |schedule|
   main_flight_detail = schedule[1]["Flights"]["Flight"]
-
-
- 
 
   main_flight_detail.each do |t|
 
      # puts "flight_num delay sch --- #{t["MarketingCarrier"]["FlightNumber"]}"
 
 
-    flight_dataa = {
+    flight_info = {
       "id" => SecureRandom.uuid,
       "flight_number" => t["MarketingCarrier"]["FlightNumber"],
       "airline" => t["MarketingCarrier"]["AirlineID"],
@@ -74,75 +63,76 @@ schedules.each do |schedule|
       "destination" => t["Arrival"]["AirportCode"],
       "scheduled_departure_at" => t["Departure"]["ScheduledTimeUTC"]["DateTime"],
       "actual_departure_at" => t["Departure"]["ActualTimeUTC"]["DateTime"],
-      "delays" => delay_dict[t["MarketingCarrier"]["FlightNumber"]] || []
+      "delays" => delay_arr[t["MarketingCarrier"]["FlightNumber"]] || []
     }
 
-    flights_data << flight_dataa
+    sample_flights_data << flight_info
     
   end
+ end
+  return sample_flights_data
 end
-  return flights_data
-end
-
-# Initialize data
-#flights_details = fetch_flight_data
-
-
-
 
 
 
 # API endpoint to get flight data
-post '/api/flights' do
+post '/cosmos/check_flights' do
   content_type :json
 
+    # Read and parse the request body
   request_body = request.body.read
-  params = JSON.parse(request_body) if request_body && !request_body.empty?
+  begin
+    params = JSON.parse(request_body) if request_body && !request_body.empty?
+  rescue JSON::ParserError
+    status 400
+    return { error: 'Invalid format' }.to_json
+  end
+
+  # Check if incoming params is nil
+  if params.nil?
+    status 400
+    return { error: 'Parameters are missing. Please provide destination and airline params' }.to_json
+  end
 
   destination = params['destination']
   airline = params['airline']
-  
 
-  #puts "Flight Details #{fetch_flight_data}"
+  filtered_flights = retrieve_flight_data.select do |flight|
 
-  filtered_flights = fetch_flight_data.select do |flight|
-
-    # puts "Flight loop --- #{flight}"
-
-    # puts "Flight Destina --- #{flight['destination']}"
-    #  puts "Flight Destina  PArams--- #{destination}"
-
-    #   puts "airline --- #{flight['airline']}"
-    #  puts "airline PArams--- #{airline}"
    
     (destination.nil? || flight['destination'] == destination) &&
     (airline.empty? || airline.include?(flight['airline']))
 
-#   ( (destination.nil? || flight['destination'] == destination) && 
-#     (airline.nil? || flight['airline'] == airline) )   || (destination.nil? || flight['destination'] == destination) 
-  
   end
 
-  return filtered_flights.to_json
+  if filtered_flights.empty?
+    status 404
+    { error: 'No flights found' }.to_json
+  else
+    #filtered_flights.to_json
+     return filtered_flights.to_json
+  end
 end
 
+
+
 # User interface to browse flights
-get '/all_flights' do
+get '/cosmos/all_flights' do
   
+content_type :json
 
-  @flights = fetch_flight_data
- 
+  @all_flights = retrieve_flight_data
 
-  return fetch_flight_data.to_json
+  @all_flights.to_json
  
 end
 
 get '/' do
   
 
-  @flights = fetch_flight_data
+  @all_flights = retrieve_flight_data
   erb :index
 
- # return fetch_flight_data.to_json
+ # return retrieve_flight_data.to_json
  
 end

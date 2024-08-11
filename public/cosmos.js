@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const destination = destinationFilter.value;
         const airline = airlineFilter.value;
 
-        // AJAX request to the API
+        // making AJAX request to the endpoint
         fetch('/api/flights', {
             method: 'POST',
             headers: {
@@ -25,13 +25,13 @@ document.addEventListener('DOMContentLoaded', function () {
         })
             .then(response => response.json())
             .then(data => {
-                // Clear existing rows
+                // clear all data in the table
                 flightTableBody.innerHTML = '';
 
                 console.log("data coming -- ", data)
 
                 if (data.length === 0) {
-                    // Show the empty notice
+                    // Show the nil notice
                     emptyNotice.style.display = 'block';
                 } else {
                     // Hide the empty notice if there are results
@@ -95,29 +95,3 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 });
-
-
-
-   
-    // function filterFlights() {
-    //     const destinationFilter = document.getElementById('destinationFilter').value.toUpperCase();
-    //     const airlineFilter = document.getElementById('airlineFilter').value.toUpperCase();
-    //     const table = document.getElementById('flightTable');
-    //     const tr = table.getElementsByTagName('tr');
-
-    //     for (let i = 1; i < tr.length; i++) {
-    //         const tdDestination = tr[i].getElementsByTagName('td')[3];
-    //         const tdAirline = tr[i].getElementsByTagName('td')[1];
-    //         if (tdDestination && tdAirline) {
-    //             const destinationValue = tdDestination.textContent || tdDestination.innerText;
-    //             const airlineValue = tdAirline.textContent || tdAirline.innerText;
-
-    //             if (destinationValue.toUpperCase().indexOf(destinationFilter) > -1 &&
-    //                 airlineValue.toUpperCase().indexOf(airlineFilter) > -1) {
-    //                 tr[i].style.display = "";
-    //             } else {
-    //                 tr[i].style.display = "none";
-    //             }
-    //         }
-    //     }
-    // }
