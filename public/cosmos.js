@@ -28,9 +28,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 // clear all data in the table
                 getflightTableBody.innerHTML = '';
 
-                console.log("data coming -- ", data)
+                console.log("data coming -- ", data.error)
 
-                if (data.length === 0) {
+                if (data.length === 0 || data.error ) {
                     // Show the null info
                     nullinfo.style.display = 'block';
                 } else {
