@@ -12,13 +12,13 @@
 
     
   <div>
-        <label for="destinationFilter">Filter by Destination:</label>
-        <input type="text" id="destinationFilter" placeholder="Enter destination..">
+        <label for="filter_destination">Filter by Destination:</label>
+        <input type="text" id="filter_destination" placeholder="Enter destination..">
 
-        <label for="airlineFilter">Filter by Airline:</label>
-        <input type="text" id="airlineFilter" placeholder="Enter airline..">
+        <label for="filter_airline">Filter by Airline:</label>
+        <input type="text" id="filter_airline" placeholder="Enter airline..">
 
-        <button id="searchButton">Filter</button>
+        <button id="srchbtn">Filter</button>
        
     </div>
     <table border="1" id="flightTable">
@@ -34,7 +34,7 @@
                 <th>Delays</th>
             </tr>
         </thead>
-        <tbody id="flightTableBody">
+        <tbody id="getflightTableBody">
            
           <%count= 1%>
             <% @all_flights.each do |fl| %>
@@ -62,12 +62,12 @@
     </table>
 
       <!-- Show if no flights are found -->
-    <div id="emptyNotice" class="notice">
+    <div id="nullinfo" class="nullinfo">
         No flights found matching after entering parameters.
     </div>
     <br>
 
-      <button id="reloadBtn">Go Back</button>
+      <button id="bkBtn">Go Back</button>
 
 
 
