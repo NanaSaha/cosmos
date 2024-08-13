@@ -13,7 +13,8 @@ API ENDPOINTS
 To Generate flights with parameters: http://{{base_url}}/cosmos/check_flights
 To display all flights: http://{{base_url}}/cosmos/all_flights
 
-PARAMETERS
+PARAMETERS 
+
 destination: "xxxxx,
 airline: "xxxx" 
 CONTENT_TYPE is in json format
@@ -22,7 +23,7 @@ CONTENT_TYPE is in json format
 RUN TESTS
 
 Tests are done using Rspec. For sinatra we have to add the rack-test gem and the spec-helper.rb file. Tests are found in the spec folder.
-To run the test run bundle exec rspec
+To run the test run "bundle exec rspec"
 
 DEPLOYMENTS 
 I chose the deploy this on a digital ocean VPS
