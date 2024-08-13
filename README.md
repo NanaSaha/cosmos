@@ -10,13 +10,13 @@ To run this app, you need to have :
 
 API ENDPOINTS
 
-To Generate flights with parameters: http://{{base_url}}/cosmos/check_flights
+To Generate flights with parameters: http://{{base_url}}/cosmos/check_flights  <br>
 To display all flights: http://{{base_url}}/cosmos/all_flights
 
 PARAMETERS 
 
 destination: "xxxxx, <br>
-airline: "xxxx" 
+airline: "xxxx"   <br>
 CONTENT_TYPE is in json format
 
 
