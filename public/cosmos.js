@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 getflightTableBody.innerHTML = '';
 
                 console.log("data coming -- ", data.error)
+                console.log("data coming -- ", data)
 
                 if (data.length === 0 || data.error ) {
                     // Show the null info
@@ -40,6 +41,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Populate the table with the filtered data
                     data.forEach(flight => {
                         const row = document.createElement('tr');
+
+                        const rowNum = document.createElement('td');
+                        rowNum.textContent = "1";
+                        row.appendChild(rowNum);
 
                         const flightNumberTd = document.createElement('td');
                         flightNumberTd.textContent = flight['flight_number'];
@@ -69,8 +74,14 @@ document.addEventListener('DOMContentLoaded', function () {
                         const delayList = document.createElement('ul');
                         flight['delays'].forEach(delay => {
                             const delayItem = document.createElement('li');
-                            delayItem.textContent = `${delay['description']} (${delay['time_minutes']} minutes)`;
+                            const delayItem2 = document.createElement('li');
+                            const delayItem3 = document.createElement('li');
+                            delayItem.textContent = `Code - ${delay['code']} ${delay['description']}`;
+                            delayItem2.textContent = `Description - ${delay['description']}`;
+                            delayItem3.textContent = `Delay time - ${delay['time_minutes']} minutes`;
                             delayList.appendChild(delayItem);
+                            delayList.appendChild(delayItem2);
+                            delayList.appendChild(delayItem3);
                         });
                         delaysTd.appendChild(delayList);
                         row.appendChild(delaysTd);
