@@ -15,7 +15,7 @@ To display all flights: http://{{base_url}}/cosmos/all_flights
 
 PARAMETERS 
 
-destination: "xxxxx,
+destination: "xxxxx, <br>
 airline: "xxxx" 
 CONTENT_TYPE is in json format
 
